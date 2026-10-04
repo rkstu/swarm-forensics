@@ -356,10 +356,12 @@ def render_propagation(datasets):
 
         st.markdown("### Propagation details")
         for url, info in top_urls[:3]:
-            with st.expander(f"{url[:80]}... → {info['total_pages']} pages"):
-                fa = info["first_appearance"]
-                st.markdown(f"**First seen:** {fa['date']} by agent `{fa['agent']}` on page `{fa['page']}`")
-                st.markdown(f"**Total events:** {info['total_events']}")
+            with st.expander(f"{url[:80]}... → {info.get('total_pages', '?')} pages"):
+                fa = info.get("first_appearance", info.get("first", {}))
+                if fa:
+                    st.markdown(f"**First seen:** {fa.get('date', '?')} by agent `{fa.get('agent', '?')}` on page `{fa.get('page', '?')}`")
+                if info.get("total_events"):
+                    st.markdown(f"**Total events:** {info['total_events']}")
 
     elif mode == "Naming Epidemics":
         cached_naming = load_cached("propagation_naming.json")
@@ -493,7 +495,7 @@ def render_attack_hierarchy(datasets):
         st.plotly_chart(fig, use_container_width=True)
 
         multi = tax["multi_technique_distribution"]
-        multi_count = sum(v for k, v in multi.items() if k > 1)
+        multi_count = sum(v for k, v in multi.items() if int(k) > 1)
         c1, c2, c3 = st.columns(3)
         c1.metric("Total classified", f"{sum(tax['technique_counts'].values()):,}")
         c2.metric("Distinct techniques", len(tax['technique_counts']))
