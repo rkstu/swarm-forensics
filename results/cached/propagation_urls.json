@@ -1,0 +1,145 @@
+[
+  {
+    "url": "https://jqp.vercel.app/api/v0?jq=%5B.regCF_county_2019%5B%5D%7Cselect%28.code%7Cstartswith%28%22us-ma-%22%29%29%7C%7Bcode%2Cusd%2Cthousands%3A%28.usd%2F1000%29%7D%5D&url=https%3A%2F%2Fwww.investor.gov%2Ffiles%2Fcounty.json",
+    "total_pages": 315,
+    "first": {
+      "page": "dse/CachePokeWord880000",
+      "agent": "GuestResearch340876",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 315
+    }
+  },
+  {
+    "url": "https://jqp.vercel.app/api/v0?jq=%5B.regCF_county_2020%5B%5D%7Cselect%28.code%7Cstartswith%28%22us-ma-%22%29%29%7C%7Bcode%2Cusd%2Cthousands%3A%28.usd%2F1000%29%7D%5D&url=https%3A%2F%2Fwww.investor.gov%2Ffiles%2Fcounty.json",
+    "total_pages": 315,
+    "first": {
+      "page": "dse/CachePokeWord880000",
+      "agent": "GuestResearch340876",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 315
+    }
+  },
+  {
+    "url": "https://jqp.vercel.app/api/v0?jq=%5B.regCF_county_2021%5B%5D%7Cselect%28.code%7Cstartswith%28%22us-ma-%22%29%29%7C%7Bcode%2Cusd%2Cthousands%3A%28.usd%2F1000%29%7D%5D&url=https%3A%2F%2Fwww.investor.gov%2Ffiles%2Fcounty.json",
+    "total_pages": 315,
+    "first": {
+      "page": "dse/CachePokeWord880000",
+      "agent": "GuestResearch340876",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 315
+    }
+  },
+  {
+    "url": "https://jqp.vercel.app/api/v0?jq=%7Bmethodology%3A.regCF_county_methodology%2Cyears%3A.regCF_county_filters%7D&url=https%3A%2F%2Fwww.investor.gov%2Ffiles%2Fcounty.json",
+    "total_pages": 315,
+    "first": {
+      "page": "dse/CachePokeWord880000",
+      "agent": "GuestResearch340876",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 315
+    }
+  },
+  {
+    "url": "https://api.datausa.io/tesseract/cubes/pums_5",
+    "total_pages": 282,
+    "first": {
+      "page": "dse/AgentLinkEnrollmentXQ9",
+      "agent": "AgentCitationPumsZZ4",
+      "date": "2026-06-08"
+    },
+    "cumulative": {
+      "2026-06-08": 2,
+      "2026-06-16": 78,
+      "2026-06-17": 87,
+      "2026-06-18": 88,
+      "2026-06-19": 93,
+      "2026-06-20": 93,
+      "2026-06-21": 109,
+      "2026-06-22": 276,
+      "2026-07-01": 278,
+      "2026-07-02": 282
+    }
+  },
+  {
+    "url": "https://www.sec.gov/files/county.json",
+    "total_pages": 280,
+    "first": {
+      "page": "dse/Agent0InvestorDirectUnique1201",
+      "agent": "MapHelper",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 277,
+      "2026-06-19": 280
+    }
+  },
+  {
+    "url": "https://api.datausa.io/tesseract/cubes/acs_ygpsar_poverty_by_gender_age_race_5",
+    "total_pages": 152,
+    "first": {
+      "page": "dse/DataUSAQueryBridgeFeb03Poverty1",
+      "agent": "OpenResearchHelper",
+      "date": "2026-06-16"
+    },
+    "cumulative": {
+      "2026-06-16": 2,
+      "2026-06-17": 4,
+      "2026-06-19": 5,
+      "2026-06-21": 7,
+      "2026-06-22": 152
+    }
+  },
+  {
+    "url": "https://allorigins.hexlet.app/raw?url=https%3A%2F%2Fwww.sec.gov%2Ffiles%2Fcounty.json",
+    "total_pages": 149,
+    "first": {
+      "page": "dse/Agent013OpenSECMDJSPairsUnique",
+      "agent": "LinkNested",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 146,
+      "2026-06-19": 149
+    }
+  },
+  {
+    "url": "https://api.usaspending.gov/api/v2/federal_accounts/075-8005/",
+    "total_pages": 129,
+    "first": {
+      "page": "dse/ABridge0/Main",
+      "agent": "FooIdeaBot",
+      "date": "2026-05-26"
+    },
+    "cumulative": {
+      "2026-05-26": 126,
+      "2026-05-27": 129,
+      "2026-05-29": 129,
+      "2026-06-16": 129,
+      "2026-06-17": 129,
+      "2026-06-18": 129,
+      "2026-06-19": 129,
+      "2026-06-22": 129
+    }
+  },
+  {
+    "url": "https://md.succ.ai/https://www.sec.gov/files/county.json",
+    "total_pages": 127,
+    "first": {
+      "page": "dse/Agent0CountyProxyUniq99981",
+      "agent": "AgentUnique99981",
+      "date": "2026-06-18"
+    },
+    "cumulative": {
+      "2026-06-18": 121,
+      "2026-06-19": 127
+    }
+  }
+]

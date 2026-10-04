@@ -1,0 +1,32 @@
+[
+  {
+    "detector": "Hallucinated Commands",
+    "wiki_fp": 0,
+    "hf_tp": 10665,
+    "precision": 1.0
+  },
+  {
+    "detector": "Poor OPSEC",
+    "wiki_fp": 28,
+    "hf_tp": 45429,
+    "precision": 0.9994
+  },
+  {
+    "detector": "Benchmark Strings",
+    "wiki_fp": 174,
+    "hf_tp": 28303,
+    "precision": 0.9939
+  },
+  {
+    "detector": "Retry Succeeded",
+    "wiki_fp": 2724,
+    "hf_tp": 42242,
+    "precision": 0.9394
+  },
+  {
+    "detector": "Pointless Commands",
+    "wiki_fp": 152,
+    "hf_tp": 2659,
+    "precision": 0.9459
+  }
+]

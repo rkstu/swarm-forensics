@@ -1,0 +1,105 @@
+{
+  "wiki": {
+    "source": "wiki",
+    "n_records": 14591,
+    "gini_activity": 0.602,
+    "crypto_density": 0.0045,
+    "type_token_ratio": 0.0315,
+    "max_hub_size": 342,
+    "phase_entropy": 0.3361,
+    "phase_counts": {
+      "recon": 4021,
+      "c2": 252,
+      "exfil": 5
+    },
+    "content_skewness": 2.4978,
+    "self_reference_density": 0.0
+  },
+  "traces": {
+    "source": "swarmtraces",
+    "n_records": 189579,
+    "gini_activity": 0.468,
+    "crypto_density": 0.1526,
+    "type_token_ratio": 0.0324,
+    "max_hub_size": 858,
+    "phase_entropy": 2.1123,
+    "phase_counts": {
+      "recon": 12998,
+      "evasion": 521,
+      "rce": 11676,
+      "dropper": 8089,
+      "exfil": 493,
+      "c2": 444,
+      "supply_chain": 118,
+      "k8s": 1463,
+      "tailscale": 733
+    },
+    "content_skewness": 11.0926,
+    "self_reference_density": 0.1239
+  },
+  "village": {
+    "source": "wiki",
+    "n_records": 183485,
+    "gini_activity": 0.6109,
+    "crypto_density": 0.0352,
+    "type_token_ratio": 0.0618,
+    "max_hub_size": 44,
+    "phase_entropy": 0.7819,
+    "phase_counts": {
+      "recon": 4213,
+      "supply_chain": 215,
+      "dropper": 33,
+      "rce": 36,
+      "c2": 294,
+      "evasion": 21,
+      "k8s": 10,
+      "exfil": 5
+    },
+    "content_skewness": 8.6837,
+    "self_reference_density": 0.0
+  },
+  "comparison": [
+    {
+      "feature": "gini_activity",
+      "value_1": 0.602,
+      "value_2": 0.468,
+      "separation": 0.223
+    },
+    {
+      "feature": "crypto_density",
+      "value_1": 0.0045,
+      "value_2": 0.1526,
+      "separation": 0.971
+    },
+    {
+      "feature": "type_token_ratio",
+      "value_1": 0.0315,
+      "value_2": 0.0324,
+      "separation": 0.028
+    },
+    {
+      "feature": "max_hub_size",
+      "value_1": 342,
+      "value_2": 858,
+      "separation": 0.601
+    },
+    {
+      "feature": "phase_entropy",
+      "value_1": 0.3361,
+      "value_2": 2.1123,
+      "separation": 0.841
+    },
+    {
+      "feature": "content_skewness",
+      "value_1": 2.4978,
+      "value_2": 11.0926,
+      "separation": 0.775
+    },
+    {
+      "feature": "self_reference_density",
+      "value_1": 0.0,
+      "value_2": 0.1239,
+      "separation": 1.0
+    }
+  ]
+}

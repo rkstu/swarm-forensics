@@ -19,15 +19,19 @@ import plotly.express as px
 import numpy as np
 
 ROOT = Path(__file__).resolve().parent
+CACHE = ROOT / "results" / "cached"
+HAS_RAW_DATA = (ROOT / "data" / "collusion-wiki" / "revisions.jsonl").exists()
 
 st.set_page_config(page_title="SwarmScope", page_icon="🔬", layout="wide", initial_sidebar_state="expanded")
 
 # ---------------------------------------------------------------------------
-# Data loading
+# Data loading (works with raw data locally or cached results when deployed)
 # ---------------------------------------------------------------------------
 @st.cache_data
 def load_dataset(name):
-    """Load a reference dataset by name."""
+    """Load a reference dataset by name. Returns records if raw data exists, empty list if not."""
+    if not HAS_RAW_DATA:
+        return []
     import sys; sys.path.insert(0, str(ROOT))
     from src.parser import load_wiki_revisions, load_swarmtraces, load_ai_village_chat
     if name == "German Wiki":
@@ -40,6 +44,8 @@ def load_dataset(name):
 
 @st.cache_data
 def load_wiki_raw():
+    if not HAS_RAW_DATA:
+        return []
     records = []
     with open(ROOT / "data" / "collusion-wiki" / "revisions.jsonl") as f:
         for line in f:
@@ -48,13 +54,25 @@ def load_wiki_raw():
 
 @st.cache_data
 def load_traces_raw():
+    path = ROOT / "data" / "swarmtraces" / "redacted.jsonl"
+    if not path.exists():
+        return []
     records = []
-    with open(ROOT / "data" / "swarmtraces" / "redacted.jsonl") as f:
+    with open(path) as f:
         for i, line in enumerate(f):
             if i >= 50000:
                 break
             records.append(json.loads(line))
     return records
+
+@st.cache_data
+def load_cached(name):
+    """Load pre-computed results from results/cached/."""
+    path = CACHE / name
+    if path.exists():
+        with open(path) as f:
+            return json.load(f)
+    return None
 
 def parse_uploaded(file_obj):
     """Parse an uploaded JSONL file into our common schema."""
@@ -183,11 +201,18 @@ def render_fingerprint(datasets):
             "max_hub_size", "phase_entropy", "content_skewness", "self_reference_density"]
 
     fingerprints = {}
+    cached_fp = load_cached("fingerprints.json")
     with st.spinner("Computing fingerprints..."):
         for name, records in datasets.items():
-            src = "swarmtraces" if name == "HF Intrusion" else "wiki"
-            records_json = json.dumps(records[:50000], default=str)
-            fingerprints[name] = compute_fingerprint_cached(records_json, src)
+            if cached_fp and not records:
+                cache_key = {"German Wiki": "wiki", "AI Village": "village", "HF Intrusion": "traces"}.get(name)
+                if cache_key and cache_key in cached_fp:
+                    fingerprints[name] = cached_fp[cache_key]
+                    continue
+            if records:
+                src = "swarmtraces" if name == "HF Intrusion" else "wiki"
+                records_json = json.dumps(records[:50000], default=str)
+                fingerprints[name] = compute_fingerprint_cached(records_json, src)
 
     all_vals = {name: [fp.get(k, 0) for k in keys] for name, fp in fingerprints.items()}
     maxvals = [max(max(abs(v[i]) for v in all_vals.values()), 0.001) for i in range(len(keys))]
@@ -294,24 +319,29 @@ def render_propagation(datasets):
         st.info("Select **German Wiki** in the sidebar. This analysis requires timestamped records.")
         return
 
-    import sys; sys.path.insert(0, str(ROOT))
-    from src.propagation import top_propagation_events, naming_epidemic_curves
-
     wiki_raw = load_wiki_raw()
+    use_cache = not wiki_raw
 
     mode = st.radio("Analysis", ["URL Spread", "Naming Epidemics", "Activity Timeline"], horizontal=True)
 
     if mode == "URL Spread":
         n_urls = st.slider("Number of URLs to trace", 3, 15, 5)
 
-        with st.spinner("Tracing URL propagation..."):
-            top_urls = top_propagation_events(wiki_raw, n=n_urls)
+        cached_urls = load_cached("propagation_urls.json")
+        if use_cache and cached_urls:
+            top_urls = [(u["url"], u) for u in cached_urls[:n_urls]]
+        else:
+            import sys; sys.path.insert(0, str(ROOT))
+            from src.propagation import top_propagation_events
+            with st.spinner("Tracing URL propagation..."):
+                top_urls = top_propagation_events(wiki_raw, n=n_urls)
 
         fig = go.Figure()
         colors = px.colors.qualitative.Set2
         for i, (url, info) in enumerate(top_urls):
-            dates = sorted(info["cumulative_by_date"].keys())
-            counts = [info["cumulative_by_date"][d] for d in dates]
+            cum = info.get("cumulative_by_date", info.get("cumulative", {}))
+            dates = sorted(cum.keys())
+            counts = [cum[d] for d in dates]
             short = url.split("?")[0].split("/")[-1][:30] if "/" in url else url[:30]
             fig.add_trace(go.Scatter(
                 x=dates, y=counts,
@@ -332,8 +362,15 @@ def render_propagation(datasets):
                 st.markdown(f"**Total events:** {info['total_events']}")
 
     elif mode == "Naming Epidemics":
-        with st.spinner("Computing naming curves..."):
-            curves, dates = naming_epidemic_curves(wiki_raw)
+        cached_naming = load_cached("propagation_naming.json")
+        if use_cache and cached_naming:
+            curves = cached_naming["curves"]
+            dates = cached_naming["dates"]
+        else:
+            import sys; sys.path.insert(0, str(ROOT))
+            from src.propagation import naming_epidemic_curves
+            with st.spinner("Computing naming curves..."):
+                curves, dates = naming_epidemic_curves(wiki_raw)
 
         conventions = st.multiselect(
             "Conventions to track",
@@ -363,26 +400,35 @@ def render_propagation(datasets):
         st.plotly_chart(fig, use_container_width=True)
 
     elif mode == "Activity Timeline":
-        daily = Counter()
-        daily_agents = defaultdict(set)
-        for r in wiki_raw:
-            d = r.get("time", "")[:10]
-            if d:
-                daily[d] += 1
-                daily_agents[d].add(r.get("label", ""))
+        cached_tl = load_cached("propagation_timeline.json")
+        if use_cache and cached_tl:
+            dates_sorted = cached_tl["dates"]
+            edits_list = cached_tl["edits"]
+            agents_list = cached_tl["agents"]
+        else:
+            daily = Counter()
+            daily_agents = defaultdict(set)
+            for r in wiki_raw:
+                d = r.get("time", "")[:10]
+                if d:
+                    daily[d] += 1
+                    daily_agents[d].add(r.get("label", ""))
+            dates_sorted = sorted(daily.keys())
+            edits_list = [daily[d] for d in dates_sorted]
+            agents_list = [len(daily_agents[d]) for d in dates_sorted]
 
-        dates_sorted = sorted(daily.keys())
         date_range = st.select_slider(
             "Date range",
             options=dates_sorted,
             value=(dates_sorted[0], dates_sorted[-1]))
 
-        filtered_dates = [d for d in dates_sorted if date_range[0] <= d <= date_range[1]]
+        filtered_idx = [i for i, d in enumerate(dates_sorted) if date_range[0] <= d <= date_range[1]]
+        filtered_dates = [dates_sorted[i] for i in filtered_idx]
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=filtered_dates, y=[daily[d] for d in filtered_dates],
+        fig.add_trace(go.Bar(x=filtered_dates, y=[edits_list[i] for i in filtered_idx],
                              name="Edits", marker_color="#4ECDC4", opacity=0.7))
         fig.add_trace(go.Scatter(x=filtered_dates,
-                                 y=[len(daily_agents[d]) for d in filtered_dates],
+                                 y=[agents_list[i] for i in filtered_idx],
                                  name="Active Agents", line=dict(color="#FF6B6B", width=2),
                                  yaxis="y2"))
         fig.update_layout(
@@ -402,16 +448,19 @@ def render_attack_hierarchy(datasets):
         st.info("Select **HF Intrusion** in the sidebar.")
         return
 
-    import sys; sys.path.insert(0, str(ROOT))
-    from src.propagation import trace_hub_hierarchy, technique_taxonomy
-
     analysis_mode = st.radio("View", ["C2 Hubs", "Technique Taxonomy"], horizontal=True)
 
+    cached_ah = load_cached("attack_hierarchy.json")
     traces = load_dataset("HF Intrusion")
 
     if analysis_mode == "C2 Hubs":
-        with st.spinner("Analyzing hub hierarchy..."):
-            hubs = trace_hub_hierarchy(traces)
+        if cached_ah and not traces:
+            hubs = cached_ah["hubs"]
+        else:
+            import sys; sys.path.insert(0, str(ROOT))
+            from src.propagation import trace_hub_hierarchy
+            with st.spinner("Analyzing hub hierarchy..."):
+                hubs = trace_hub_hierarchy(traces)
 
         n_hubs = st.slider("Number of hubs to show", 3, 10, 5)
         for h in hubs[:n_hubs]:
@@ -426,8 +475,13 @@ def render_attack_hierarchy(datasets):
                 st.caption(f"Child types: {h['child_kinds']}")
 
     elif analysis_mode == "Technique Taxonomy":
-        with st.spinner("Classifying techniques..."):
-            tax = technique_taxonomy(traces)
+        if cached_ah and not traces:
+            tax = cached_ah["taxonomy"]
+        else:
+            import sys; sys.path.insert(0, str(ROOT))
+            from src.propagation import technique_taxonomy
+            with st.spinner("Classifying techniques..."):
+                tax = technique_taxonomy(traces)
 
         tech_df = pd.DataFrame([
             {"Technique": k.replace("_", " ").title(), "Count": v}
@@ -456,12 +510,25 @@ def render_detector_bench(datasets):
         "When you include both a benign and an attack dataset, you can see the false positive rate."
     )
 
-    if len(datasets) < 1:
-        st.warning("Select at least one dataset.")
+    cached_fp = load_cached("fp_table.json")
+    if cached_fp:
+        st.markdown("### Pre-computed reliability (German Wiki vs HF Intrusion)")
+        fp_df = pd.DataFrame(cached_fp)
+        fp_df.columns = ["Detector", "Wiki Hits (FP)", "HF Hits (TP)", "Precision"]
+        fp_df["Precision"] = fp_df["Precision"].apply(lambda x: f"{x:.1%}")
+        st.dataframe(fp_df, use_container_width=True, hide_index=True)
+        st.caption("Hallucinated Commands: 100% precision (zero false positives on benign data). "
+                   "Retry Succeeded: noisiest at 93.9%.")
+        st.markdown("---")
+
+    has_live = any(len(r) > 0 for r in datasets.values())
+    if not has_live:
+        st.info("Upload your own data through the sidebar to run detectors live, "
+                "or download the reference datasets locally.")
         return
 
     detector_choice = st.multiselect(
-        "Detectors to run",
+        "Run detectors live on selected datasets",
         ["All Elastic Signals", "Frank Coordination", "METR Attack Phases"],
         default=["All Elastic Signals"]
     )
@@ -540,11 +607,29 @@ def render_detector_bench(datasets):
 def render_explorer(datasets):
     st.markdown("## Record Explorer")
 
-    if not datasets:
-        st.warning("Select at least one dataset.")
+    has_live = any(len(r) > 0 for r in datasets.values())
+    if not has_live:
+        cached_agents = load_cached("wiki_agents.json")
+        cached_traces = load_cached("traces_sample.json")
+        if cached_agents or cached_traces:
+            st.info("Showing cached samples. Download data locally or upload your own for full exploration.")
+            if cached_agents:
+                st.markdown(f"### Wiki agents ({len(cached_agents)} agents)")
+                top = sorted(cached_agents.items(), key=lambda x: -x[1]["edits"])[:20]
+                for name, info in top:
+                    with st.expander(f"{name} ({info['edits']} edits, {info['pages']} pages)"):
+                        for s in info.get("samples", []):
+                            st.code(s, language="text")
+            if cached_traces:
+                st.markdown(f"### SwarmTraces sample ({len(cached_traces)} records)")
+                for r in cached_traces[:20]:
+                    with st.expander(f"{r['id']} [{r.get('kind', '?')}]"):
+                        st.code(r.get("text", "")[:600], language="text")
+        else:
+            st.warning("No data available. Upload your own JSONL through the sidebar.")
         return
 
-    dataset_name = st.selectbox("Dataset", list(datasets.keys()))
+    dataset_name = st.selectbox("Dataset", [k for k, v in datasets.items() if v])
     records = datasets[dataset_name]
 
     col1, col2, col3 = st.columns(3)
