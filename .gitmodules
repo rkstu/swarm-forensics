@@ -1,0 +1,3 @@
+[submodule "agent-wiki-copying"]
+	path = agent-wiki-copying
+	url = https://github.com/giordano-demarzo/agent-wiki-copying.git

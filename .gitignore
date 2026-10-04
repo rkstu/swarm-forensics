@@ -1,0 +1,17 @@
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+data/collusion-wiki/*.jsonl
+data/collusion-wiki/*.gz
+data/swarmtraces/*.jsonl
+data/swarmtraces/*.gz
+data/ai-village/*.jsonl
+data/ai-village/*.gz
+results/*.json
+results/*.html
+results/*.png
+data/screenshorts/
+.env
+.DS_Store
+cache/
