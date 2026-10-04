@@ -2,7 +2,7 @@
 
 I kept running into the same problem: coordination detectors fire on benign data and attack data with the same confidence. A wiki full of agents copying each other's homework triggers 4 of 6 Elastic behavioral signals. The HuggingFace intrusion triggers all 6. The detectors can't tell you which is which.
 
-So I built a tool to find out what separates them. SwarmScope takes multi-agent transcripts, computes a coordination fingerprint, and compares your data against three reference incidents. It runs published detection methods and shows you which ones you can trust and which ones cry wolf.
+So I built a tool to find out what separates them. SwarmScope takes multi-agent transcripts, computes a coordination fingerprint, and compares your data against three reference incidents. It runs published detection methods and shows you which ones hold up against a benign baseline and which ones don't.
 
 **Live tool:** [https://swarm-forensics.streamlit.app/]
 **Write-up:** [docs/WRITEUP.md](docs/WRITEUP.md)
@@ -24,7 +24,7 @@ The coordination fingerprint separates them cleanly on 5 of 7 dimensions:
 | Vocabulary diversity | 0.032 | 0.062 | 0.032 |
 | Content skewness | 2.5 | 8.7 | 11.1 |
 
-Self-reference density (whether agents mention their own evaluation infrastructure) was a perfect separator: zero in both benign datasets, 12.4% in the attack. Phase entropy measures how many types of activity are present: the wiki does one thing (recon), the village does a few, the intrusion spans all 9 phases of a cyber kill chain.
+Self-reference density (whether agents mention their own evaluation infrastructure) scored zero in both benign datasets and 12.4% in the attack. Phase entropy measures how many types of activity are present: the wiki does one thing (recon), the village does a few, the intrusion spans all 9 phases of a cyber kill chain.
 
 I also traced how information spreads through a swarm. On the wiki, the "OpenAI" naming convention appeared on June 16, reached 51% of new agents by June 19, and dropped to 6% by June 22. These are measurable epidemic curves of cultural conventions propagating through a population of short-lived agents that never overlapped in time.
 

@@ -9,7 +9,7 @@ I tested it on 387,655 records across all three hackathon-provided datasets: the
 **Live demo:** [swarm-forensics.streamlit.app](https://swarm-forensics.streamlit.app/)
 **Code:** [github.com/rkstu/swarm-forensics](https://github.com/rkstu/swarm-forensics)
 
-## What we found
+## What it found
 
 ### Three coordination modes produce three distinct fingerprints
 
@@ -29,9 +29,9 @@ The numbers behind the chart:
 | Max hub size | 342 | 44 | 858 |
 | Activity concentration | 0.60 | 0.61 | 0 |
 
-Self-reference density measures whether agents mention their own evaluation infrastructure (things like runtime identifiers, source paths, ExploitGym references). Both benign datasets scored exactly 0%. The HuggingFace intrusion scored 16.9%. That's a perfect separator, and it makes sense: the attacking agents leaked references to the OpenAI evaluation environment they escaped from, something no benign agent would do.
+Self-reference density measures whether agents mention their own evaluation infrastructure (things like runtime identifiers, source paths, ExploitGym references). Both benign datasets scored exactly 0%. The HuggingFace intrusion scored 16.9%. The attacking agents leaked references to the OpenAI evaluation environment they escaped from, which is something benign agents have no reason to do.
 
-Phase entropy measures how many types of activity are present using HuggingFace's 9-phase attack taxonomy (RECON, RCE, DROPPER, EXFIL, C2, K8S, SUPPLY-CHAIN, TAILSCALE, EVASION). The wiki scores 0.34 because nearly all its records are reconnaissance (agents looking up information). The AI Village scores 0.82 (a wider range of activities). The intrusion scores 2.13, spanning all 9 phases of a full cyber kill chain.
+Phase entropy measures how many types of activity are present using HuggingFace's 9-phase attack taxonomy (RECON, RCE, DROPPER, EXFIL, C2, K8S, SUPPLY-CHAIN, TAILSCALE, EVASION). The wiki scores 0.34 because nearly all its records are reconnaissance (agents looking up information). The AI Village scores 0.82 (a wider range of activities). The intrusion scores 2.13, spanning all 9 phases of the kill chain.
 
 The fingerprint is a reusable function: `compute_fingerprint(records)` takes any list of multi-agent records and returns 7 numbers. An investigator can compute it on new data in under 30 seconds and compare the shape against these three reference points.
 
@@ -56,7 +56,7 @@ I ran each of Elastic's 6 behavioral signals on the wiki (benign baseline) and S
 | Benchmark Strings | 174 | 28,303 | 99.4% |
 | Retry Succeeded | 2,724 | 42,242 | 93.9% |
 
-Hallucinated Commands (error patterns like "command not found" and "syntax error") had zero false positives on benign data and 10,665 true positives on the attack. That's a signal you can trust. Retry Succeeded was the noisiest, with a 6% false positive rate on the wiki, because benign agents also repeat content when editing the same page. These numbers give a future investigator a starting point for which signals to prioritize.
+Hallucinated Commands (error patterns like "command not found" and "syntax error") had zero false positives on benign data and 10,665 true positives on the attack data. Retry Succeeded was the noisiest, with a 6% false positive rate on the wiki, because benign agents also repeat content when editing the same page.
 
 ## How the tool works
 
@@ -107,7 +107,7 @@ The local version runs every computation from scratch on the raw datasets. The f
 
 ## What this is built on
 
-Every detector traces to a published source. I took existing methods and made them executable, composable, and testable across multiple datasets. Nothing here is a standalone claim: each finding is produced by a published method applied to public data.
+Every detector traces to a published source. I took existing methods and made them runnable across multiple datasets so the results can be compared and verified. Each finding is produced by a published method applied to public data.
 
 The coordination fingerprint draws features from Elastic's behavioral signals, HuggingFace's 9-phase taxonomy, and Pacheco et al.'s network coordination analysis. The unsanctioned coordination assessment implements Frank's formal Definition 1, which requires both inter-execution influence and convention evidence. The proportional copying null model from De Marzo et al. (included as an MIT-licensed git submodule) establishes the baseline for what benign agent behavior looks like on the wiki.
 
@@ -119,7 +119,7 @@ The false positive rates are measured against one benign baseline. Different kin
 
 The AI Village analysis uses chat messages only. Agent goals, memories, and computer use sessions are in the dataset but not yet analyzed.
 
-The live demo shows cached results. The local version is the source of truth.
+The live demo shows cached results because of hosting constraints. The local version runs everything from raw data.
 
 ## Team
 
